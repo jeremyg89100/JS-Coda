@@ -122,5 +122,5 @@ for (i = 0; i < students.length; i++) {
     }
 }
 if (compteur === students.length) {
-    console.log("Félicitations tout le monde est passé !");
-}
+    console.log("Félicitations tout le monde est passé !"); 
+} 
