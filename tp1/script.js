@@ -92,7 +92,7 @@ while (n < students.length) {
         count++;
         console.log(count, " élèves sont admis.");
     }
-    n++;
+    n++; // En dehors de la boucle pour bien commencer au premier élément
 }
 
 // Bonus
@@ -101,7 +101,7 @@ for (i = 0; i < students.length; i++) {
     let moyenne_eleve = (students[i].note_francais + students[i].note_maths) / 2;
     moyenne_classe += moyenne_eleve;
 }
-console.log(moyenne_classe / i);
+console.log(moyenne_classe / i); // Division par i pour calculer la moyenne
 
 // Bonus 2
 
