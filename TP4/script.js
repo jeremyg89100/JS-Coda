@@ -67,8 +67,8 @@ function afficherEleves(tableau) {
 function trouverMoyenneMin(tableau, indexDepart) {
   let min = nombreEleves[indexDepart].moyenne;
   let index_min = indexDepart;
+  // Recherche de la note minimale
   for (let j = indexDepart + 1; j < taille; j++) {
-    //Calcul de la note minimale
     if (min > nombreEleves[j].moyenne) {
       min = nombreEleves[j].moyenne;
       index_min = j;
@@ -102,6 +102,7 @@ function trouverMoyenneMax(tableau) {
   return moyenne_maximale;
 }
 
+// Regroupe les différentes fonctions pour en afficher les données
 function afficherDonnees(tableau) {
   afficherEleves(nombre_classe);
   afficherMoyenneMin(nombre_classe);
@@ -114,7 +115,7 @@ function afficherDonnees(tableau) {
 function swap(tableau, indexA, indexB) {
   let stockage = 0;
   eleve_min = nombreEleves[indexB];
-
+  // Echange les données de l'élèves de l'index B à l'index A.
   stockage = nombreEleves[indexA];
   nombreEleves[indexA] = eleve_min;
   nombreEleves[indexB] = stockage;
@@ -123,6 +124,7 @@ function swap(tableau, indexA, indexB) {
 // Partie 6
 
 function triParSelection(tableau) {
+  // Initialisation des compteurs
   let compteur_verification = 0;
   let compteur_echange = 0;
   console.log("Après tri :");
