@@ -59,16 +59,31 @@ class Player {
       if (this.walkSpriteIndex >= this.walkSpriteNumber) {
         this.walkSpriteIndex = 0;
       }
-    } else if (this.isAttacking) {
+    }
+
+    // Animation attaque
+    else if (
+      this.isAttacking ||
+      this.currentAttackingSpriteStep > 0 ||
+      this.attackingSpriteIndex > 0
+    ) {
       this.currentAttackingSpriteStep++;
       if (this.currentAttackingSpriteStep >= this.attackingSpriteDuration) {
         this.currentAttackingSpriteStep = 0;
         this.attackingSpriteIndex++;
       }
       if (this.attackingSpriteIndex >= this.attackingSpriteNumber) {
+        this.attackingSpriteIndex = 0;
         this.walkSpriteIndex = 0;
       }
-    } else if (this.isDying) {
+    }
+
+    // Animation mort
+    else if (
+      this.isDying ||
+      this.currentDyingSpriteStep > 0 ||
+      this.dyingSpriteIndex > 0
+    ) {
       this.currentDyingSpriteStep++;
       if (this.currentDyingSpriteStep >= this.dyingSpriteDuration) {
         this.currentDyingSpriteStep = 0;
