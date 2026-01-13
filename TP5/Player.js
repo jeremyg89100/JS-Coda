@@ -6,7 +6,7 @@ class Player {
     this.skin = skin;
   }
 
-  isWalking = true;
+  isWalking = false;
   walkSpriteDuration = 2;
   walkSpriteIndex = 0;
   walkSpriteNumber = 9;
@@ -77,30 +77,53 @@ class Player {
     } else {
       this.walkSpriteIndex = 0;
     }
-    console.log("isWalking animation \n");
-    console.log("isWalking = ", this.isWalking);
-    console.log(
-      "walkingSpriteIndex =",
-      this.walkSpriteIndex,
-      "/",
-      this.walkSpriteNumber
-    );
-    console.log(
-      "WalkingSpriteStep =",
-      this.currentWalkSpriteStep,
-      "/",
-      this.walkSpriteDuration
-    );
   }
 }
 
 const p1 = new Player("Jeremy", 0, 0, 1);
 
+for (let i = 0; i < 6; i++) {
+  p1.animate();
+  p1.isWalking = true;
+  console.log("walk :", p1.walkSpriteIndex);
+}
+p1.isWalking = false;
+
+for (let i = 0; i < 12; i++) {
+  p1.animate();
+  p1.isAttacking = true;
+  console.log("attack :", p1.attackingSpriteIndex);
+}
+p1.isAttacking = false;
+
+for (let i = 0; i < 6; i++) {
+  p1.animate();
+  p1.isWalking = true;
+  console.log("walk :", p1.walkSpriteIndex);
+}
+p1.isWalking = false;
+
 for (let i = 0; i < 10; i++) {
   p1.animate();
+  p1.isDying = true;
+  console.log("die :", p1.dyingSpriteIndex);
 }
 
 // Direction à définir pour le sprite de la marche
 // walkSpriteDuration = 2 (le sprite se fait en 2 frames)
 // WalkSpriteIndex = 0; s'update quand le perso marche
 // WalkSpriteNumber = 9; (seulement pour la marche), à changer pour les autres animations
+
+//  console.log("isWalking animation \n");
+//     console.log("isWalking = ", this.isWalking);
+//     console.log(
+//       "walkingSpriteIndex =",
+//       this.walkSpriteIndex,
+//       "/",
+//       this.walkSpriteNumber
+//     );
+//     console.log(
+//       "WalkingSpriteStep =",
+//       this.currentWalkSpriteStep,
+//       "/",
+//       this.walkSpriteDuration);
