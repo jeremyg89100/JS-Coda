@@ -1,15 +1,12 @@
 const liste = document.querySelector("#choixPerso");
-const taille = 64;
-const cols = 20;
+
+// Initialisation de skinPath
 let skinPath;
 
+// Boucle qui parcoure toutes les images présentes dans assets
 for (let i = 1; i <= 29; i++) {
   const img = new Image();
   img.src = `assets/${i}.png`;
-
-  // const label = document.createElement("label"); // Création label
-  // const check = document.createElement("input"); // Création de l'input
-  // check.type = "checkbox";
 
   const canvas = document.createElement("canvas"); // Création canvas
 
@@ -31,13 +28,15 @@ for (let i = 1; i <= 29; i++) {
     // ctx.drawImage(img, coordonée x du coin supérieur gauche, coordonnée y du coin supérieur gauche,
     // largeur de la zone de l'image, hauteur de la zone de l'image, coordonnée x où coller l'image,
     //  coordonnée y où coller l'image, largeur de l'image, hauteur de l'image)
-    canvas.append(img);
+
+    canvas.appendChild(img);
     liste.appendChild(canvas);
 
+    // Ecouteur placé pour récupérer le skin au clic
     canvas.addEventListener("click", function () {
       skinPath = `assets/${i}.png`;
 
-      // Récupère tous les skins dans la variable getSkins
+      // Initialisation de la variable qui va récupérer tous les skins
       const getSkins = liste.querySelectorAll("canvas");
 
       // Boucle tous les skins et retire le css .sélection lors d'un clic
@@ -52,15 +51,20 @@ for (let i = 1; i <= 29; i++) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("skins");
+  const form = document.querySelector("#skins");
   form.addEventListener("submit", function (event) {
     event.preventDefault(); // empêche le rechargement de la page
 
-    const pseudo = document.getElementById("name").value.trim();
-    const serverUrl = document.getElementById("url").value.trim();
+    // Récupère les valeurs, trim permet de retirer les espaces
+    const pseudo = document.querySelector("#name").value.trim();
+    const serverUrl = document.querySelector("#url").value.trim();
 
+    // Message d'alerte si une ou plusieurs données ne sont pas présentes
     if (pseudo === "" || serverUrl === "" || skinPath === null) {
-      alert("Erreur: information(s) manquante(s)");
+      const joinButton = document.querySelector("#joinButton");
+      const alert = document.createElement("p");
+      alert.textContent = "Erreur : information(s) manquante(s)";
+      form.insertBefore(alert, joinButton);
     }
 
     let monStockage = localStorage;
@@ -68,6 +72,6 @@ document.addEventListener("DOMContentLoaded", () => {
     monStockage.setItem("url", serverUrl);
     monStockage.setItem("click", skinPath);
 
-    console.log(monStockage, pseudo, serverUrl, skinPath);
+    console.log(pseudo, serverUrl, skinPath);
   });
 });
