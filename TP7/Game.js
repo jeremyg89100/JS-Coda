@@ -1,3 +1,44 @@
+// Exemple de message recu par le backend, à utiliser pour vos tests :
+const backendData = {
+  isRunning: true,
+  isOver: false,
+  timer: 190.6000000000091,
+  players: {
+    "3cd71bbb-6a6b-4d4e-80e3-107130328a27": {
+      name: "blabla",
+      skinPath: "./spritesheets/3.png",
+      position: [0.5600000000000003, 0.17999999999999977],
+      lvl: 1,
+      hp: 100,
+      maxHp: 100,
+      hpRegenRate: 10,
+      speed: 0.2,
+      direction: 3,
+      isAttacking: false,
+      isWalking: false,
+      isDying: false,
+      attackCooldown: 1,
+      currentAttackCooldown: 0,
+    },
+    "28ead291-fcea-4b41-a596-d3c876c49a53": {
+      name: "bloublou",
+      skinPath: "./spritesheets/4.png",
+      position: [0.44, 0.19],
+      lvl: 1,
+      hp: 100,
+      maxHp: 100,
+      hpRegenRate: 10,
+      speed: 0.2,
+      direction: 0,
+      isAttacking: false,
+      isWalking: false,
+      isDying: false,
+      attackCooldown: 1,
+      currentAttackCooldown: 0,
+    },
+  },
+};
+
 class Game {
   constructor() {
     this.isRunning = false;
@@ -21,10 +62,10 @@ class Game {
       } // Si il n'existe pas, crée le joueur
       else {
         this.players[playerId] = new Player(
+          playerId,
           playerData.name,
           playerData.skinPath,
           playerData.position,
-          playerId
         );
       }
     }
@@ -34,6 +75,9 @@ class Game {
       if (!id.has(playerId)) {
         delete this.players[playerId];
       }
+      // Ajout d'un joueur et test
+      testCode.players["test-uuid-123"] = backendData.players[playerId];
+      console.log(backendData);
     }
   }
 }
@@ -68,29 +112,5 @@ const testCode = {
 // Instance le jeu
 const game = new Game();
 
-// Mise à jour et création du joueur
-game.update(testCode);
-
 // Récupération du joueur
 const gnieh = game.players["test-uuid-123"];
-
-console.log("Le perso : ", gnieh);
-console.log("Nom : ", gnieh.name);
-console.log("Direction :", gnieh.direction);
-
-for (let i = 0; i < 40; i++) {
-  gnieh.animate();
-  gnieh.isWalking = true;
-  console.log("Walk Sprite Index", gnieh.walkSpriteIndex);
-}
-gnieh.isWalking = false;
-for (let i = 0; i < 5; i++) {
-  gnieh.animate();
-  gnieh.isAttacking = true;
-  console.log("Attack Sprite Index", gnieh.attackSpriteIndex);
-}
-testCode.players["test-uuid-123"].isWalking = false;
-testCode.players["test-uuid-123"].isAttacking = true;
-game.update(testCode);
-console.log(testCode.players["test-uuid-123"].isWalking);
-console.log(testCode.players["test-uuid-123"].isAttacking);
