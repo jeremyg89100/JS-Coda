@@ -51,6 +51,8 @@ class GameView {
       this.playerSkin[skinPath] = new Image();
       this.playerSkin[skinPath].src = player.skinPath;
     }
+
+    // Variable du skin du player
     const skin = this.playerSkin[skinPath];
 
     const x = player.renderX * this.width;
@@ -60,6 +62,33 @@ class GameView {
     let spriteY = 0;
     const spriteWidth = 64;
     const spriteHeight = 64;
+
+    // Débug inversion du sens de la marche
+    let actualDirection = player.direction;
+    if (player.direction === 1) {
+      // East devient West
+      actualDirection = 3;
+    } else if (player.direction === 3) {
+      // West devient East
+      actualDirection = 1;
+    }
+
+    const walkSpriteCol = 8;
+    const attackSpriteCol = 55;
+    if (player.isDying || player.deathSpriteIndex > 0) {
+      spriteX = player.deathSpriteIndex * spriteWidth;
+      spriteY = actualDirection * spriteHeight + spriteHeight * 4;
+    } else if (player.isAttacking || player.attackSpriteIndex > 0) {
+      spriteX = player.attackSpriteIndex * spriteWidth;
+      spriteY =
+        (actualDirection + attackSpriteCol) * spriteHeight + spriteHeight * 4;
+    } else if (player.isWalking) {
+      spriteX = player.walkSpriteIndex * spriteWidth;
+      spriteY = (actualDirection + walkSpriteCol) * spriteHeight;
+    } else {
+      spriteX = 0;
+      spriteY = actualDirection * spriteHeight;
+    }
 
     this.ctx.drawImage(
       skin,

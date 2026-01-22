@@ -24,6 +24,10 @@ class GameController {
     // Duration between two server ticks in milliseconds
     this.SERVER_INTERVAL = 1000 / this.SERVER_TICK_RATE;
 
+    // Variables pour calculer alpha
+    this.lastServerUpdate = performance.now(); // Timestamp de la dernière mise à jour du serveur
+    this.previousServerUpdate = performance.now(); // Timestamp de la précédente mise à jour du serveur
+
     // Permanently bind "this" at the instance of the GameController class
     this.loop = this.loop.bind(this);
 
@@ -33,6 +37,20 @@ class GameController {
 
   // === Main render loop ===
   loop(timestamp) {
+    // Calculer le temps écoulé depuis la dernière mise à jour du serveur
+    const timeSinceLastUpdate = timestamp - this.lastServerUpdate;
+
+    // Alpha se trouve entre 0 et 1, il avance entre deux ticks serveur
+    let alpha = timeSinceLastUpdate / this.SERVER_INTERVAL;
+
+    // Limiter alpha entre 0 et 1
+    alpha = Math.min(alpha, 1.0);
+
+    for (const id in this.infos.players) {
+      const player = this.infos.players[id];
+      player.interpolate(alpha);
+    }
+
     // Request the next frame
     this.gameView.render();
     requestAnimationFrame(this.loop);

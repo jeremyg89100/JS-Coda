@@ -14,6 +14,14 @@ class Player {
     // Path to the spritesheet used to represent the player (idem)
     this.skinPath = skinPath;
 
+    // Position before update server
+    this.previousX = position[0];
+    this.previousY = position[1];
+
+    // Position after update server
+    this.currentX = position[0];
+    this.currentY = position[1];
+
     // --- RENDER positions ---
     this.renderX = position[0];
     this.renderY = position[1];
@@ -35,12 +43,12 @@ class Player {
     this.walkSpriteIndex = 0;
     this.walkSpritesNumber = 9;
     this.currentWalkSpriteStep = 0;
-    this.walkSpriteDuration = 3;
+    this.walkSpriteDuration = 7;
 
     this.attackSpriteIndex = 0;
     this.attackSpritesNumber = 6;
     this.currentAttackSpriteStep = 0;
-    this.attackSpriteDuration = 0;
+    this.attackSpriteDuration = 10;
 
     this.deathSpriteIndex = 0;
     this.deathSpritesNumber = 6;
@@ -49,8 +57,13 @@ class Player {
   }
 
   update(updateData) {
+    // Update the previous position with the current position
+    this.previousX = this.currentX;
+    this.previousY = this.currentY;
+
     // Update authoritative position
-    [this.renderX, this.renderY] = updateData.position;
+    [this.currentX, this.currentY] = updateData.position;
+    // [this.renderX, this.renderY] = updateData.position;
 
     // Update stats
     this.name = updateData.name;
@@ -68,6 +81,11 @@ class Player {
     this.skinPath = updateData.skinPath;
   }
 
+  // Interpolation entre la position précédente et la position actuelle
+  interpolate(alpha) {
+    this.renderX = this.previousX + (this.currentX - this.previousX) * alpha;
+    this.renderY = this.previousY + (this.currentY - this.currentY) * alpha;
+  }
   animate() {
     // If the player is walking
     if (this.isWalking) {
