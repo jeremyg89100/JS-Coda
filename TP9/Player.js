@@ -43,12 +43,12 @@ class Player {
     this.walkSpriteIndex = 0;
     this.walkSpritesNumber = 9;
     this.currentWalkSpriteStep = 0;
-    this.walkSpriteDuration = 10;
+    this.walkSpriteDuration = 8;
 
     this.attackSpriteIndex = 0;
     this.attackSpritesNumber = 6;
     this.currentAttackSpriteStep = 0;
-    this.attackSpriteDuration = 6;
+    this.attackSpriteDuration = 3;
 
     this.deathSpriteIndex = 0;
     this.deathSpritesNumber = 6;

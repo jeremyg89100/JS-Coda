@@ -14,10 +14,8 @@ class GameController {
     };
 
     this.socket = new WebSocket(this.serverUrl);
-    this.initSocket();
     this.initInput();
-
-    this.startInputSender;
+    this.initSocket();
 
     // Server sends updates at 20 ticks per second
     this.SERVER_TICK_RATE = 20;
@@ -67,9 +65,9 @@ class GameController {
       this.socket.send(
         JSON.stringify({ name: this.name, skinPath: this.skinPath }),
       );
-
       this.startInputSender();
     };
+    // this.startInputSender();
   }
 
   initInput() {

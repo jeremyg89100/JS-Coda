@@ -3,11 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="game.css" />
     <title>Document</title>
   </head>
   <body>
-    <canvas id="game" width="800" height="800"></canvas>
-    <div></div>
+    <div id="flex">
+      <canvas id="game" width="800" height="800"></canvas>
+      <section id="section">
+        <div id="compteurPerso"></div>
+        <div id="classement-container">
+          <div class="game-classement"></div>
+          <div class="classementMort"></div>
+        </div>
+      </section>
+    </div>
     <script src="Player.js"></script>
     <script src="Game.js"></script>
     <script src="GameView.js"></script>

@@ -15,6 +15,30 @@ class GameView {
 
     this.playerSkin = {};
 
+    // Timer
+    this.timer = document.createElement("h2");
+    this.timer.className = "game-timer";
+    const section = document.querySelector("#compteurPerso");
+    section.appendChild(this.timer);
+
+    // Compteur des joueurs encore en vie
+    this.livingCounter = document.createElement("div");
+    this.livingCounter.className = "compteurVivant";
+    const compteur = document.querySelector("#compteurPerso");
+    compteur.appendChild(this.livingCounter);
+
+    // Classement joueurs vivant
+    this.classement = document.createElement("div");
+    const h2 = document.querySelector("#classement-container");
+    this.classement.className = "game-classement";
+    h2.appendChild(this.classement);
+
+    // Classement joueurs morts
+    this.classementDesMort = document.createElement("div");
+    this.classementDesMort.className = "classementMort";
+    const container = document.querySelector("#classement-container");
+    container.appendChild(this.classementDesMort);
+
     this.render();
   }
   clear() {
@@ -27,11 +51,13 @@ class GameView {
   render() {
     this.clear();
     this.drawBackground();
+    this.timerStatus();
+    this.classementPlayer();
     const players = this.game.infos.players;
     for (const id in players) {
       const player = players[id];
 
-      if (player != player.isDead) {
+      if (!player.isDead) {
         player.animate();
         this.drawPlayer(player);
       }
@@ -145,8 +171,42 @@ class GameView {
       attackBarHeight,
     );
   }
-  // gameStatus() {
-  //   const timer = document.createElement("p");
-  //   const time =
-  // }
+  timerStatus() {
+    const minutes = Math.floor(this.game.infos.timer / 60);
+    const secondes = Math.floor(this.game.infos.timer % 60);
+    const timeString = `${minutes}:${secondes.toString().padStart(2, "0")}`;
+    this.timer.textContent = `Temps de la partie : ${timeString}`;
+  }
+
+  classementPlayer() {
+    const players = this.game.infos.players;
+
+    let playerAlive = 0;
+    let totalPlayer = 0;
+
+    let playerArrayAlive = Object.values(players);
+    let playerArrayDead = Object.values(players);
+
+    playerArrayAlive.sort((a, b) => b.lvl - a.lvl);
+
+    let classementHtml = "<h3> Classement :</h3>";
+    let classementMort = "";
+
+    // Compte les joueurs
+    playerArrayAlive.forEach((player) => {
+      totalPlayer++;
+      if (!player.isDead) playerAlive++;
+      classementHtml += `<p> ${player.name} : Level - ${player.lvl}</p>`;
+    });
+
+    playerArrayDead.forEach((player) => {
+      if (player.isDead) classementMort += `<p> ${player.name} : Mort </p>`;
+    });
+
+    const counterHtml = `<h3> Joueurs restants : ${playerAlive} / ${totalPlayer} </h3>`;
+    this.livingCounter.innerHTML = counterHtml;
+
+    this.classement.innerHTML = classementHtml;
+    this.classementDesMort.innerHTML = classementMort;
+  }
 }
