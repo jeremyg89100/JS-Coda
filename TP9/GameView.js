@@ -60,8 +60,8 @@ class GameView {
 
     let spriteX = 0;
     let spriteY = 0;
-    const spriteWidth = 64;
-    const spriteHeight = 64;
+    let spriteWidth = 64;
+    let spriteHeight = 64;
 
     // Débug inversion du sens de la marche
     let actualDirection = player.direction;
@@ -73,15 +73,20 @@ class GameView {
       actualDirection = 1;
     }
 
+    const deathSpriteCol = 20;
     const walkSpriteCol = 8;
-    const attackSpriteCol = 55;
+    // Variable pour trouver le sprite de l'attaque
+    const nombreColonne = 18;
+    // Attack = 3456
+
     if (player.isDying || player.deathSpriteIndex > 0) {
       spriteX = player.deathSpriteIndex * spriteWidth;
-      spriteY = actualDirection * spriteHeight + spriteHeight * 4;
+      spriteY = deathSpriteCol * spriteHeight;
     } else if (player.isAttacking || player.attackSpriteIndex > 0) {
+      spriteHeight = 192;
+      spriteWidth = 192;
       spriteX = player.attackSpriteIndex * spriteWidth;
-      spriteY =
-        (actualDirection + attackSpriteCol) * spriteHeight + spriteHeight * 4;
+      spriteY = (actualDirection + nombreColonne) * spriteHeight;
     } else if (player.isWalking) {
       spriteX = player.walkSpriteIndex * spriteWidth;
       spriteY = (actualDirection + walkSpriteCol) * spriteHeight;
@@ -101,5 +106,47 @@ class GameView {
       spriteWidth,
       spriteHeight,
     );
+
+    // Barre de vie
+    const barWidth = 50;
+    const barHeight = 5;
+    const hpPercent = player.hp / player.maxHp;
+
+    this.ctx.fillStyle = "red";
+    this.ctx.fillRect(
+      x - barWidth / 2,
+      y - 35,
+      barWidth * hpPercent,
+      barHeight,
+    );
+
+    // Nom player
+    const nameChara = player.name;
+    this.ctx.fillStyle = "white";
+    this.ctx.strokeStyle = "black";
+    this.ctx.lineWidth = 1;
+    this.ctx.textAlign = "center";
+    this.ctx.fillText(nameChara, x, y - 40);
+    // this.ctx.strokeText(nameChara, x, y - 40);
+    this.ctx.font = "14px Arial";
+
+    //Bar Cooldown attaque
+    const maxAttackBarWidth = 50;
+    const attackBarHeight = 5;
+    const playerAttackBar =
+      maxAttackBarWidth *
+      (1 - player.currentAttackCooldown / player.attackCooldown);
+
+    this.ctx.fillStyle = "white";
+    this.ctx.fillRect(
+      x - playerAttackBar / 2,
+      y - 30,
+      playerAttackBar,
+      attackBarHeight,
+    );
   }
+  // gameStatus() {
+  //   const timer = document.createElement("p");
+  //   const time =
+  // }
 }

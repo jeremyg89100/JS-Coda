@@ -56,7 +56,6 @@ class Game:
             self.over = True
 
 
-
     async def broadcast_state(self):
         state = {
             "isRunning": self.is_running,
@@ -76,8 +75,10 @@ class Game:
                 self.remove_player(player.id)
 
 
-    def add_player(self, websocket, name, skin_id):
-        player = Player(name, skin_id)
+    def add_player(self, websocket, name, skin_path):
+        if skin_path.startswith("../"):
+            skin_path = skin_path[1:]
+        player = Player(name, skin_path)
         self.players[player.id] = player
         self.connections[player.id] = websocket
         return player
@@ -124,7 +125,7 @@ class Game:
 
     def handle_input(self, player_id, data):
         player = self.players.get(player_id)
-        if not player:
+        if not player or player.is_dead:
             return
 
         input = data.get("input")
@@ -138,21 +139,25 @@ class Game:
             player.is_walking = False
         elif input.get("up"):
             player.y -= player.speed * TICK_DURATION
+            player.y = max(min(player.y, 1.0), 0.0)
             player.direction = 0
             player.is_walking = True
             player.is_attacking = False
         elif input.get("down"):
             player.y += player.speed * TICK_DURATION
+            player.y = max(min(player.y, 1.0), 0.0)
             player.direction = 2
             player.is_walking = True
             player.is_attacking = False
         elif input.get("right"):
             player.x += player.speed * TICK_DURATION
+            player.x = max(min(player.x, 1.0), 0.0)
             player.direction = 1
             player.is_walking = True
             player.is_attacking = False
         elif input.get("left"):
             player.x -= player.speed * TICK_DURATION
+            player.x = max(min(player.x, 1.0), 0.0)
             player.direction = 3
             player.is_walking = True
             player.is_attacking = False

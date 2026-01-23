@@ -26,7 +26,6 @@ class GameController {
 
     // Variables pour calculer alpha
     this.lastServerUpdate = performance.now(); // Timestamp de la dernière mise à jour du serveur
-    this.previousServerUpdate = performance.now(); // Timestamp de la précédente mise à jour du serveur
 
     // Permanently bind "this" at the instance of the GameController class
     this.loop = this.loop.bind(this);
@@ -37,15 +36,13 @@ class GameController {
 
   // === Main render loop ===
   loop(timestamp) {
-    // Calculer le temps écoulé depuis la dernière mise à jour du serveur
-    const timeSinceLastUpdate = timestamp - this.lastServerUpdate;
-
     // Alpha se trouve entre 0 et 1, il avance entre deux ticks serveur
-    let alpha = timeSinceLastUpdate / this.SERVER_INTERVAL;
+    let alpha = Math.min(
+      (timestamp - this.lastServerUpdate) / this.SERVER_INTERVAL,
+      1,
+    );
 
-    // Limiter alpha entre 0 et 1
-    alpha = Math.min(alpha, 1.0);
-
+    // Interpolation de tous les joueurs
     for (const id in this.infos.players) {
       const player = this.infos.players[id];
       player.interpolate(alpha);
@@ -63,6 +60,8 @@ class GameController {
       this.socket.onmessage = (e) => {
         const data = JSON.parse(e.data);
         this.infos.update(data);
+        this.lastServerUpdate = performance.now();
+        // console.log(data);
       };
 
       this.socket.send(
