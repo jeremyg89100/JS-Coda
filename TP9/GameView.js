@@ -184,23 +184,30 @@ class GameView {
     let playerAlive = 0;
     let totalPlayer = 0;
 
-    let playerArrayAlive = Object.values(players);
-    let playerArrayDead = Object.values(players);
+    let allPlayers = Object.values(players);
 
+    // Séparer vivants et morts
+    let playerArrayAlive = allPlayers.filter((player) => !player.isDead);
+    let playerArrayDead = allPlayers.filter((player) => player.isDead);
+
+    // Classe les joueurs par lvl (du plus grand au plus petit)
     playerArrayAlive.sort((a, b) => b.lvl - a.lvl);
 
     let classementHtml = "<h3> Classement :</h3>";
     let classementMort = "";
 
-    // Compte les joueurs
+    // Compte tous les joueurs
+    totalPlayer = allPlayers.length;
+    playerAlive = playerArrayAlive.length;
+
+    // Affiche seulement les vivants
     playerArrayAlive.forEach((player) => {
-      totalPlayer++;
-      if (!player.isDead) playerAlive++;
       classementHtml += `<p> ${player.name} : Level - ${player.lvl}</p>`;
     });
 
+    // Affiche seulement les morts
     playerArrayDead.forEach((player) => {
-      if (player.isDead) classementMort += `<p> ${player.name} : Mort </p>`;
+      classementMort += `<p> ${player.name} : Mort </p>`;
     });
 
     const counterHtml = `<h3> Joueurs restants : ${playerAlive} / ${totalPlayer} </h3>`;
