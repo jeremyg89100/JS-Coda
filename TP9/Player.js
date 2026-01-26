@@ -13,6 +13,7 @@ class Player {
     this.name = name;
     // Path to the spritesheet used to represent the player (idem)
     this.skinPath = skinPath;
+    this.playerTimer;
 
     // Position before update server
     this.previousX = position[0];

@@ -56,7 +56,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Récupère les valeurs, trim permet de retirer les espaces
     const pseudo = document.querySelector("#name").value.trim();
-    const serverUrl = document.querySelector("#url").value.trim();
+    let serverUrl = document.querySelector("#url").value.trim();
+
+    if (!serverUrl.startsWith("ws://") && !serverUrl.startsWith("wss://")) {
+      serverUrl = "ws://" + serverUrl;
+    }
 
     // Message d'alerte si une ou plusieurs données ne sont pas présentes
     if (pseudo === "" || serverUrl === "" || skinPath === null) {

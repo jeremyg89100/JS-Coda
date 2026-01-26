@@ -14,8 +14,8 @@ class GameController {
     };
 
     this.socket = new WebSocket(this.serverUrl);
-    this.initInput();
     this.initSocket();
+    this.initInput();
 
     // Server sends updates at 20 ticks per second
     this.SERVER_TICK_RATE = 20;
@@ -53,13 +53,13 @@ class GameController {
 
   initSocket() {
     this.socket.onopen = () => {
-      console.log("Connected to server");
+      console.log("Connected to server : ", this.serverUrl);
 
       this.socket.onmessage = (e) => {
         const data = JSON.parse(e.data);
         this.infos.update(data);
         this.lastServerUpdate = performance.now();
-        // console.log(data);
+        console.log(data);
       };
 
       this.socket.send(

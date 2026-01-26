@@ -56,19 +56,24 @@ class GameView {
     const players = this.game.infos.players;
     for (const id in players) {
       const player = players[id];
-
-      if (!player.isDead) {
-        player.animate();
-        this.drawPlayer(player);
+      if (this.game.infos.isOver === false) {
+        if (!player.isDead) {
+          player.animate();
+          this.drawPlayer(player);
+        }
+      } else {
+        this.drawWinner(player);
       }
     }
   }
 
   drawPlayer(player) {
     let skinPath = player.skinPath;
+    let maudit = [26, 29, 24, 21, 18, 13, 7];
+    const skinNumber = Number(player.skinPath.replace(/\D/g, ""));
 
-    // Débug du skinPath
     if (!skinPath.startsWith("./") && !skinPath.startsWith("http")) {
+      // Débug du skinPath
       skinPath = "./" + skinPath;
     }
 
@@ -102,15 +107,21 @@ class GameView {
     const deathSpriteCol = 20;
     const walkSpriteCol = 8;
     // Variable pour trouver le sprite de l'attaque
-    const nombreColonne = 18;
+    let nombreColonne = 18;
     // Attack = 3456
 
     if (player.isDying || player.deathSpriteIndex > 0) {
       spriteX = player.deathSpriteIndex * spriteWidth;
       spriteY = deathSpriteCol * spriteHeight;
     } else if (player.isAttacking || player.attackSpriteIndex > 0) {
-      spriteHeight = 192;
-      spriteWidth = 192;
+      if (maudit.includes(skinNumber)) {
+        spriteWidth = 128;
+        spriteHeight = 128;
+        nombreColonne = 27;
+      } else {
+        spriteHeight = 192;
+        spriteWidth = 192;
+      }
       spriteX = player.attackSpriteIndex * spriteWidth;
       spriteY = (actualDirection + nombreColonne) * spriteHeight;
     } else if (player.isWalking) {
@@ -181,10 +192,10 @@ class GameView {
   classementPlayer() {
     const players = this.game.infos.players;
 
-    let playerAlive = 0;
-    let totalPlayer = 0;
-
     let allPlayers = Object.values(players);
+
+    const minutes = Math.floor(this.game.infos.timer / 60);
+    const secondes = Math.floor(this.game.infos.timer % 60);
 
     // Séparer vivants et morts
     let playerArrayAlive = allPlayers.filter((player) => !player.isDead);
@@ -193,12 +204,20 @@ class GameView {
     // Classe les joueurs par lvl (du plus grand au plus petit)
     playerArrayAlive.sort((a, b) => b.lvl - a.lvl);
 
+    for (const id in players) {
+      if (!players[id].isDead) {
+        players[id].playerTimer =
+          `${minutes}:${secondes.toString().padStart(2, "0")}`;
+      }
+      playerArrayDead.sort((a, b) => b.playerTimer - a.playerTimer);
+    }
+
     let classementHtml = "<h3> Classement :</h3>";
     let classementMort = "";
 
     // Compte tous les joueurs
-    totalPlayer = allPlayers.length;
-    playerAlive = playerArrayAlive.length;
+    let totalPlayer = allPlayers.length;
+    let playerAlive = playerArrayAlive.length;
 
     // Affiche seulement les vivants
     playerArrayAlive.forEach((player) => {
@@ -207,7 +226,7 @@ class GameView {
 
     // Affiche seulement les morts
     playerArrayDead.forEach((player) => {
-      classementMort += `<p> ${player.name} : Mort </p>`;
+      classementMort += `<p> ${player.name} : Mort ${player.playerTimer}</p>`;
     });
 
     const counterHtml = `<h3> Joueurs restants : ${playerAlive} / ${totalPlayer} </h3>`;
@@ -215,5 +234,59 @@ class GameView {
 
     this.classement.innerHTML = classementHtml;
     this.classementDesMort.innerHTML = classementMort;
+  }
+
+  drawWinner(player) {
+    let skinPath = player.skinPath;
+
+    if (!skinPath.startsWith("./") && !skinPath.startsWith("http")) {
+      // Débug du skinPath
+      skinPath = "./" + skinPath;
+    }
+
+    if (!this.playerSkin[skinPath]) {
+      this.playerSkin[skinPath] = new Image();
+      this.playerSkin[skinPath].src = skinPath;
+      return;
+    }
+
+    // Variable du skin du player
+    const skin = this.playerSkin[skinPath];
+
+    const x = player.renderX * this.width;
+    const y = player.renderY * this.height;
+
+    let spriteX = 250;
+    let spriteY = 250;
+    let spriteWidth = 64 * 8;
+    let spriteHeight = 64 * 8;
+    let spriteSize = 64;
+
+    this.ctx.drawImage(
+      skin,
+      spriteX,
+      spriteY,
+      spriteSize,
+      spriteSize,
+      x - spriteWidth / 2,
+      y - spriteHeight / 2,
+      spriteWidth,
+      spriteHeight,
+    );
+    // Nom player
+    const nameChara = player.name;
+    this.ctx.fillStyle = "white";
+    this.ctx.strokeStyle = "black";
+    this.ctx.lineWidth = 1;
+    this.ctx.textAlign = "center";
+    this.ctx.fillText(nameChara, x + 50, y - 100);
+    this.ctx.font = "80px Arial";
+
+    // Victoire Affichage
+    const victoire = "Victoire !";
+    this.ctx.fillStyle = "white";
+    this.ctx.textAlign = "center";
+    this.ctx.fillText(victoire, x + 50, y - 150);
+    this.ctx.font = "30px Arial";
   }
 }

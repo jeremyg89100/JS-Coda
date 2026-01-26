@@ -4,19 +4,28 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="portail.css" />
-    <title>Document</title>
+    <title>JS Arena - Lobby</title>
   </head>
   <body>
     <header></header>
     <main>
       <h1>js arena</h1>
-      <form action="" method="submit" id="skins">
+      <form id="skins">
         <label for="name">Entrez votre pseudo &nbsp;:</label>
-        <input type="text" id="name" name="name" />
+        <input type="text" id="name" name="name" required />
+
         <label for="url">Lien Backend &nbsp;:</label>
-        <input type="text" id="url" name="url" value="ws://localhost:8000/ws" />
+        <input
+          type="text"
+          id="url"
+          name="url"
+          value="ws://localhost:8000/ws"
+          required
+        />
+
         <div id="choixPerso"></div>
-        <button type="submit" name="button" id="joinButton">Join</button>
+
+        <button type="submit" id="joinButton">Join</button>
       </form>
     </main>
     <footer></footer>
