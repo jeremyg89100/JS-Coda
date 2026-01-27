@@ -49,6 +49,7 @@ class GameView {
   }
 
   render() {
+    console.log(this.game.infos.isOver);
     this.clear();
     this.drawBackground();
     this.timerStatus();

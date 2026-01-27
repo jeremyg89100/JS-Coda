@@ -48,6 +48,7 @@ class Game {
   }
   update(gameStateFromServer) {
     this.timer = gameStateFromServer.timer;
+    this.isOver = gameStateFromServer.isOver;
 
     // Set assemble toutes les clés
     const id = new Set(Object.keys(gameStateFromServer.players));
