@@ -57,7 +57,7 @@ class GameView {
     for (const id in players) {
       const player = players[id];
       if (this.game.infos.isOver === false) {
-        if (!player.isDead) {
+        if (!player.isDying) {
           player.animate();
           this.drawPlayer(player);
         }
@@ -194,23 +194,23 @@ class GameView {
 
     let allPlayers = Object.values(players);
 
-    const minutes = Math.floor(this.game.infos.timer / 60);
-    const secondes = Math.floor(this.game.infos.timer % 60);
-
     // Séparer vivants et morts
-    let playerArrayAlive = allPlayers.filter((player) => !player.isDead);
-    let playerArrayDead = allPlayers.filter((player) => player.isDead);
+    let playerArrayAlive = allPlayers.filter((player) => !player.isDying);
+    let playerArrayDead = allPlayers.filter((player) => player.isDying);
 
     // Classe les joueurs par lvl (du plus grand au plus petit)
     playerArrayAlive.sort((a, b) => b.lvl - a.lvl);
 
-    for (const id in players) {
-      if (!players[id].isDead) {
-        players[id].playerTimer =
-          `${minutes}:${secondes.toString().padStart(2, "0")}`;
+    playerArrayDead.forEach((player) => {
+      if (!player.deathTimestamp) {
+        const minutes = Math.floor(this.game.infos.timer / 60);
+        const secondes = Math.floor(this.game.infos.timer % 60);
+        player.deathTimestamp = minutes * 60 + secondes; // Converti en secondes total
+        player.playerTimer = `${minutes}:${secondes.toString().padStart(2, "0")}`;
       }
-      playerArrayDead.sort((a, b) => b.playerTimer - a.playerTimer);
-    }
+    });
+
+    playerArrayDead.sort((a, b) => b.deathTimestamp - a.deathTimestamp);
 
     let classementHtml = "<h3> Classement :</h3>";
     let classementMort = "";
@@ -239,54 +239,63 @@ class GameView {
   drawWinner(player) {
     let skinPath = player.skinPath;
 
+    // Correction du chemin si nécessaire
     if (!skinPath.startsWith("./") && !skinPath.startsWith("http")) {
-      // Débug du skinPath
       skinPath = "./" + skinPath;
     }
 
+    // Chargement du skin si pas encore chargé
     if (!this.playerSkin[skinPath]) {
       this.playerSkin[skinPath] = new Image();
       this.playerSkin[skinPath].src = skinPath;
       return;
     }
 
-    // Variable du skin du player
     const skin = this.playerSkin[skinPath];
 
-    const x = player.renderX * this.width;
-    const y = player.renderY * this.height;
+    // Position fixe à l'écran
+    const centerX = this.width / 2;
+    const centerY = this.height / 2;
 
-    let spriteX = 250;
-    let spriteY = 250;
-    let spriteWidth = 64 * 8;
-    let spriteHeight = 64 * 8;
-    let spriteSize = 64;
+    // Sprite agrandi
+    const spriteSize = 64;
+    const scale = 8;
+    const displayWidth = spriteSize * scale;
+    const displayHeight = spriteSize * scale;
 
+    const spriteX = 0;
+    const spriteY = 128;
+
+    // Dessin du personnage centré
     this.ctx.drawImage(
       skin,
       spriteX,
       spriteY,
       spriteSize,
       spriteSize,
-      x - spriteWidth / 2,
-      y - spriteHeight / 2,
-      spriteWidth,
-      spriteHeight,
+      centerX - displayWidth / 2,
+      centerY - displayHeight / 2,
+      displayWidth,
+      displayHeight,
     );
-    // Nom player
+
+    // Texte victoire
+    const victoire = "VICTOIRE !";
+    this.ctx.fillStyle = "#FFD700";
+    this.ctx.strokeStyle = "black";
+    this.ctx.lineWidth = 3;
+    this.ctx.textAlign = "center";
+    this.ctx.font = "bold 60px Arial";
+
+    // Ombre sur texte victoire
+    this.ctx.fillText(victoire, centerX, centerY - displayHeight / 2);
+    this.ctx.strokeText(victoire, centerX, centerY - displayHeight / 2);
+
+    // Nom du joueur
     const nameChara = player.name;
     this.ctx.fillStyle = "white";
-    this.ctx.strokeStyle = "black";
-    this.ctx.lineWidth = 1;
-    this.ctx.textAlign = "center";
-    this.ctx.fillText(nameChara, x + 50, y - 100);
-    this.ctx.font = "80px Arial";
-
-    // Victoire Affichage
-    const victoire = "Victoire !";
-    this.ctx.fillStyle = "white";
-    this.ctx.textAlign = "center";
-    this.ctx.fillText(victoire, x + 50, y - 150);
-    this.ctx.font = "30px Arial";
+    this.ctx.font = "bold 40px Arial";
+    this.ctx.fillText(nameChara, centerX, centerY + displayHeight / 2 + 50);
+    this.ctx.strokeText(nameChara, centerX, centerY + displayHeight / 2 + 50);
   }
 }

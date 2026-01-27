@@ -33,7 +33,7 @@ for (let i = 1; i <= 29; i++) {
 
     // Ecouteur placé pour récupérer le skin au clic
     canvas.addEventListener("click", function () {
-      skinPath = `./assets/${i}.png`;
+      skinPath = `assets/${i}.png`;
 
       // Initialisation de la variable qui va récupérer tous les skins
       const getSkins = liste.querySelectorAll("canvas");
