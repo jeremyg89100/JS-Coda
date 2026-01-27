@@ -64,7 +64,7 @@ class Game:
 
     def is_ip_connected(self, ip):
         # Try swarming now
-        # return False
+        return False
         return ip in self.ip_map
 
     # ================= GAME LOOP =================

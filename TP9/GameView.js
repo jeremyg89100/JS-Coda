@@ -27,7 +27,7 @@ class GameView {
     const compteur = document.querySelector("#compteurPerso");
     compteur.appendChild(this.livingCounter);
 
-    // Classement joueurs vivant
+    // Classement joueurs vivants
     this.classement = document.createElement("div");
     const h2 = document.querySelector("#classement-container");
     this.classement.className = "game-classement";
@@ -54,15 +54,19 @@ class GameView {
     this.timerStatus();
     this.classementPlayer();
     const players = this.game.infos.players;
-    for (const id in players) {
-      const player = players[id];
-      if (this.game.infos.isOver === false) {
-        if (!player.isDying) {
-          player.animate();
-          this.drawPlayer(player);
-        }
-      } else {
+
+    if (this.game.infos.isOver === true) {
+      // Afficher uniquement le gagnant (le joueur encore vivant)
+      for (const id in players) {
+        const player = players[id];
         this.drawWinner(player);
+      }
+    } else {
+      // Partie en cours : afficher tous les joueurs
+      for (const id in players) {
+        const player = players[id];
+        player.animate();
+        this.drawPlayer(player);
       }
     }
   }
@@ -106,13 +110,12 @@ class GameView {
 
     // let deathSpriteCol = 19;
     let walkSpriteCol = 8;
-    // Variable pour trouver le sprite de l'attaque
+    // Variable pour trouver le sprite de l'attaque à 192px
     let nombreColonne = 18;
-    // Attack = 3456
 
     if (player.isDying || player.deathSpriteIndex > 0 || player.hp <= 0) {
       spriteX = player.deathSpriteIndex * spriteWidth;
-      spriteY = 21 * spriteHeight;
+      spriteY = 20 * spriteHeight;
     } else if (player.isAttacking || player.attackSpriteIndex > 0) {
       if (maudit.includes(skinNumber)) {
         spriteWidth = 128;
@@ -144,43 +147,44 @@ class GameView {
       spriteHeight,
     );
 
-    // Barre de vie
-    const barWidth = 50;
-    const barHeight = 5;
-    const hpPercent = player.hp / player.maxHp;
+    // Barre de vie (ne pas afficher si le joueur est mort)
+    if (!player.isDying) {
+      const barWidth = 50;
+      const barHeight = 5;
+      const hpPercent = player.hp / player.maxHp;
 
-    this.ctx.fillStyle = "red";
-    this.ctx.fillRect(
-      x - barWidth / 2,
-      y - 35,
-      barWidth * hpPercent,
-      barHeight,
-    );
+      this.ctx.fillStyle = "red";
+      this.ctx.fillRect(
+        x - barWidth / 2,
+        y - 35,
+        barWidth * hpPercent,
+        barHeight,
+      );
 
-    // Nom player
-    const nameChara = player.name;
-    const levelChara = player.lvl;
-    this.ctx.fillStyle = "white";
-    this.ctx.lineWidth = 1;
-    this.ctx.textAlign = "center";
-    this.ctx.fillText(nameChara + "  Lvl " + levelChara, x, y - 40);
-    // this.ctx.strokeText(nameChara, x, y - 40);
-    this.ctx.font = "10px Arial";
+      // Nom player
+      const nameChara = player.name;
+      const levelChara = player.lvl;
+      this.ctx.fillStyle = "white";
+      this.ctx.lineWidth = 1;
+      this.ctx.textAlign = "center";
+      this.ctx.fillText(nameChara + "  Lvl " + levelChara, x, y - 40);
+      this.ctx.font = "10px Arial";
 
-    //Bar Cooldown attaque
-    const maxAttackBarWidth = 50;
-    const attackBarHeight = 5;
-    const playerAttackBar =
-      maxAttackBarWidth *
-      (1 - player.currentAttackCooldown / player.attackCooldown);
+      //Bar Cooldown attaque
+      const maxAttackBarWidth = 50;
+      const attackBarHeight = 5;
+      const playerAttackBar =
+        maxAttackBarWidth *
+        (1 - player.currentAttackCooldown / player.attackCooldown);
 
-    this.ctx.fillStyle = "white";
-    this.ctx.fillRect(
-      x - playerAttackBar / 2,
-      y - 30,
-      playerAttackBar,
-      attackBarHeight,
-    );
+      this.ctx.fillStyle = "white";
+      this.ctx.fillRect(
+        x - playerAttackBar / 2,
+        y - 30,
+        playerAttackBar,
+        attackBarHeight,
+      );
+    }
   }
   timerStatus() {
     const minutes = Math.floor(this.game.infos.timer / 60);
