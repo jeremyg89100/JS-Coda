@@ -104,15 +104,15 @@ class GameView {
       actualDirection = 1;
     }
 
-    const deathSpriteCol = 20;
-    const walkSpriteCol = 8;
+    // let deathSpriteCol = 19;
+    let walkSpriteCol = 8;
     // Variable pour trouver le sprite de l'attaque
     let nombreColonne = 18;
     // Attack = 3456
 
-    if (player.isDying || player.deathSpriteIndex > 0) {
+    if (player.isDying || player.deathSpriteIndex > 0 || player.hp <= 0) {
       spriteX = player.deathSpriteIndex * spriteWidth;
-      spriteY = deathSpriteCol * spriteHeight;
+      spriteY = 21 * spriteHeight;
     } else if (player.isAttacking || player.attackSpriteIndex > 0) {
       if (maudit.includes(skinNumber)) {
         spriteWidth = 128;
@@ -159,13 +159,13 @@ class GameView {
 
     // Nom player
     const nameChara = player.name;
+    const levelChara = player.lvl;
     this.ctx.fillStyle = "white";
-    this.ctx.strokeStyle = "black";
     this.ctx.lineWidth = 1;
     this.ctx.textAlign = "center";
-    this.ctx.fillText(nameChara, x, y - 40);
+    this.ctx.fillText(nameChara + "  Lvl " + levelChara, x, y - 40);
     // this.ctx.strokeText(nameChara, x, y - 40);
-    this.ctx.font = "14px Arial";
+    this.ctx.font = "10px Arial";
 
     //Bar Cooldown attaque
     const maxAttackBarWidth = 50;

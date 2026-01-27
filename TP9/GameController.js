@@ -67,7 +67,7 @@ class GameController {
       );
       this.startInputSender();
     };
-    // this.startInputSender();
+    this.startInputSender();
   }
 
   initInput() {
