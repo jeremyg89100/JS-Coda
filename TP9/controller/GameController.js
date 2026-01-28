@@ -1,10 +1,10 @@
-class GameController {
-  constructor() {
+export default class GameController {
+  constructor(game, gameView) {
     this.name = localStorage.getItem("name");
     this.serverUrl = localStorage.getItem("url");
     this.skinPath = localStorage.getItem("click");
-    this.infos = new Game();
-    this.gameView = new GameView(this);
+    this.game = game;
+    this.gameView = gameView;
     this.inputState = {
       up: false,
       down: false,
@@ -41,8 +41,8 @@ class GameController {
     );
 
     // Interpolation de tous les joueurs
-    for (const id in this.infos.players) {
-      const player = this.infos.players[id];
+    for (const id in this.game.players) {
+      const player = this.game.players[id];
       player.interpolate(alpha);
     }
 
@@ -54,10 +54,11 @@ class GameController {
   initSocket() {
     this.socket.onopen = () => {
       console.log("Connected to server : ", this.serverUrl);
+      console.log(this.game);
 
       this.socket.onmessage = (e) => {
         const data = JSON.parse(e.data);
-        this.infos.update(data);
+        this.game.update(data);
         this.lastServerUpdate = performance.now();
         console.log(data);
       };
@@ -106,7 +107,3 @@ class GameController {
     }, this.SERVER_INTERVAL);
   }
 }
-
-// === Start the game controller by instantiating the GameController class ===
-// This line will execute the constructor (e.g, launch the frontend)
-new GameController();

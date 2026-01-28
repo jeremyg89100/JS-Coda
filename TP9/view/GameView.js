@@ -1,6 +1,6 @@
 // python -m uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 
-class GameView {
+export default class GameView {
   constructor(game) {
     this.game = game;
     this.canvas = document.querySelector("canvas");
@@ -10,7 +10,7 @@ class GameView {
 
     // Chargement du fond
     this.background = new Image();
-    this.background.src = "img/jsarena.jpg";
+    this.background.src = "./img/jsarena.jpg";
     this.background.onload = () => this.drawBackground();
 
     this.playerSkin = {};
@@ -49,14 +49,14 @@ class GameView {
   }
 
   render() {
-    console.log(this.game.infos.isOver);
+    // console.log(this.game.isOver);
     this.clear();
     this.drawBackground();
     this.timerStatus();
     this.classementPlayer();
-    const players = this.game.infos.players;
+    const players = this.game.players;
 
-    if (this.game.infos.isOver === true) {
+    if (this.game.isOver === true) {
       // Afficher uniquement le gagnant (le joueur encore vivant)
       for (const id in players) {
         const player = players[id];
@@ -188,14 +188,14 @@ class GameView {
     }
   }
   timerStatus() {
-    const minutes = Math.floor(this.game.infos.timer / 60);
-    const secondes = Math.floor(this.game.infos.timer % 60);
+    const minutes = Math.floor(this.game.timer / 60);
+    const secondes = Math.floor(this.game.timer % 60);
     const timeString = `${minutes}:${secondes.toString().padStart(2, "0")}`;
     this.timer.textContent = `Temps de la partie : ${timeString}`;
   }
 
   classementPlayer() {
-    const players = this.game.infos.players;
+    const players = this.game.players;
 
     let allPlayers = Object.values(players);
 
