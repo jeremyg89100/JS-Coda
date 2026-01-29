@@ -1,4 +1,4 @@
-export const directions = {
+const directions = {
   north: 0,
   east: 1,
   south: 2,

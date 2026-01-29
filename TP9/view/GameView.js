@@ -208,8 +208,8 @@ export default class GameView {
 
     playerArrayDead.forEach((player) => {
       if (!player.deathTimestamp) {
-        const minutes = Math.floor(this.game.infos.timer / 60);
-        const secondes = Math.floor(this.game.infos.timer % 60);
+        const minutes = Math.floor(this.game.timer / 60);
+        const secondes = Math.floor(this.game.timer % 60);
         player.deathTimestamp = minutes * 60 + secondes; // Converti en secondes total
         player.playerTimer = `${minutes}:${secondes.toString().padStart(2, "0")}`;
       }

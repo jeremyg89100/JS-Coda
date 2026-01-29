@@ -1,5 +1,4 @@
 import Player from "./Player.js";
-import { directions } from "./Player.js";
 
 export default class Game {
   constructor() {

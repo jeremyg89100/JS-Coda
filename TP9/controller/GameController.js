@@ -54,13 +54,11 @@ export default class GameController {
   initSocket() {
     this.socket.onopen = () => {
       console.log("Connected to server : ", this.serverUrl);
-      console.log(this.game);
 
       this.socket.onmessage = (e) => {
         const data = JSON.parse(e.data);
         this.game.update(data);
         this.lastServerUpdate = performance.now();
-        console.log(data);
       };
 
       this.socket.send(
