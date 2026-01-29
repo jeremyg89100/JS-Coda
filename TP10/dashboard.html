@@ -1,0 +1,37 @@
+<!-- http://10.45.31.53:8000/api/listPlayers pour accéder avec Postman  -->
+<!-- http://10.45.31.53:8000/api/stats?name=TheWall Pour accéder à mon perso -->
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JsArena Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>JS Arena Dashboard</h1>
+      <div class="dashboard"></div>
+    </div>
+    <div id="flex">
+      <div id="listPlayers"></div>
+      <div class="table-wrapper">
+        <table id="rankingTable">
+          <thead>
+            <tr>
+              <th>Position</th>
+              <th>Joueur</th>
+              <th><button id="gamePlayed">Partie jouées</button></th>
+              <th><button id="kills">Kills</button></th>
+              <th><button id="death">Morts</button></th>
+              <th><button id="ratio">Ratio K/D</button></th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+    <script src="dashboard.js" type="module"></script>
+  </body>
+</html>
