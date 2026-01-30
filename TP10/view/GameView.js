@@ -60,7 +60,7 @@ export default class GameView {
       // Afficher uniquement le gagnant (le joueur encore vivant)
       for (const id in players) {
         const player = players[id];
-        this.drawWinner(player);
+        if (!player.isDying) this.drawWinner(player);
       }
     } else {
       // Partie en cours : afficher tous les joueurs
