@@ -131,15 +131,15 @@ td {
 #playerStats {
   border: #ffa010 2px solid;
   width: 270px;
-  height: 250px;
+  height: 300px;
   border-radius: 20px;
 }
 
-#playerStats p {
+#playerStats h3 {
   text-align: center;
 }
 
-#playerStats h3 {
+#playerStats p {
   text-align: center;
 }
 

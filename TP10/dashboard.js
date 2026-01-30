@@ -22,7 +22,6 @@ function getUrl() {
     "",
   );
 }
-// 13.38.137.68
 
 // Écouteur d'affichage des tableaux
 document.querySelector("#buttonServer").addEventListener("click", async () => {
@@ -135,8 +134,31 @@ async function getPlayer() {
     button.className = "buttonsPlayersName";
 
     button.addEventListener("click", async () => {
-      // Sauvegarde le joueur sélectionné
       selectedPlayerName = player.name;
+
+      // Appel de l'API pour les stats des joueurs
+      const stats = await loadPlayerStats(player.name);
+      if (!stats) return;
+
+      let playerStatsDiv = document.querySelector("#playerStats");
+
+      //Création de la div si elle n'existe pas
+      if (!playerStatsDiv) {
+        playerStatsDiv = document.createElement("div");
+        playerStatsDiv.id = "playerStats";
+      }
+      // Ajout d'un tableau des stats de joueurs au clic
+      playerStatsDiv.innerHTML = `
+    <h3>${stats.name}</h3>
+    <p>Parties jouées: ${stats.gamesPlayed}</p>
+    <p>Kills: ${stats.totalKills}</p>
+    <p>Morts: ${stats.totalDeaths}</p>
+    <p>Ratio K/D: ${stats.kdRatio}</p>
+    <p>Rang dernière partie: ${stats.lastGameRank}</p>
+    <p>Classement global: ${stats.overallRanking}</p>
+  `;
+      // Place le tableau après les boutons de nom de joueur
+      document.querySelector("#listPlayers").after(playerStatsDiv);
 
       // Retire l'ancien surlignage
       document.querySelectorAll("#rankingTable tbody tr").forEach((row) => {
